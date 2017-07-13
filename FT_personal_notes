@@ -1,0 +1,19 @@
+
+Make controller example:
+1. php artisan make:controller PagesController
+2. php artisan make:controller PostsController --resource
+
+Make model example:
+php artisan make:model Post
+
+Interact with database:
+php artisan tinker
+Example commands:
+App\Post::count();
+$post = new App\Post();
+$post->title = 'Post One';
+$post->body = 'This is the post body';
+$post->save();
+
+Check all routes:
+php artisan route:list

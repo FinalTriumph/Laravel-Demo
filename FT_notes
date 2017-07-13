@@ -1,3 +1,0 @@
-
-Make controller example:
-php artisan make:controller PagesController
