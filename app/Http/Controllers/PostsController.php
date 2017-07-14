@@ -8,6 +8,11 @@ use App\Http\Requests;
 
 use App\Post;
 
+/* DB part 1/2
+use DB;
+*/
+
+
 class PostsController extends Controller
 {
     /**
@@ -17,7 +22,17 @@ class PostsController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        /* DB part 2/2
+        $posts = DB::select('SELECT * FROM posts');
+        */
+        
+        //$posts = Post::all();
+        
+        //$posts = Post::orderBy('created_at', 'desc')->take(1)->get();
+        
+        $posts = Post::orderBy('created_at', 'desc')->paginate(5);
+        
+        //$posts = Post::orderBy('created_at', 'desc')->get();
         return view('posts.index')->with('posts', $posts);
     }
 
@@ -28,7 +43,7 @@ class PostsController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -39,7 +54,20 @@ class PostsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+                'title' => 'required',
+                'body' => 'required'
+            ]);
+            
+        // Create Post
+        $post = new Post;
+        
+        $post->title = $request->input('title');
+        $post->body = $request->input('body');
+        
+        $post->save();
+        
+        return redirect('/posts')->with('success', 'Post Created');
     }
 
     /**
@@ -50,7 +78,10 @@ class PostsController extends Controller
      */
     public function show($id)
     {
-        //
+        //return Post::where('id', $id)->get();
+        
+        $post = Post::find($id);
+        return view('posts.show')->with('post', $post);
     }
 
     /**
