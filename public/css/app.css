@@ -1,30 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
-body {
+#app-layout {
     text-align: center;
     font-family: 'Raleway', sans-serif;
     margin: 0;
 }
-nav {
-    text-align: right;
-    padding: 0.8em 4em;
-    background-color: #222;
-    color: #fff;
-}
-nav a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 0.9em;
-    margin: 1em;
-}
-nav a:hover {
-    text-decoration: underline;
-    color: #ddd;
-}
-ul {
+.services {
     list-style-type: none;
 }
-li {
+.services li {
     background-color: #fafafa;
     width: 30em;
     padding: 1em 2em;
@@ -41,26 +25,17 @@ li {
     text-align: left;
 }
 .post_div a,
-.go_back{
+.links_in_post{
     color: #000;
     text-decoration: none;
 }
 .post_div a:hover,
-.go_back:hover {
+.links_in_post:hover {
     color: #444;
     text-decoration: underline;
 }
 hr {
     width: 70%;
-}
-.pagination li {
-    background-color: #fafafa;
-    display: inline-block;
-    width: 1em;
-    padding: 0.5em;
-    border: 1px solid #aaa;
-    margin: 0.2em;
-    text-align: center;
 }
 .form_div {
     text-align: left;
@@ -73,7 +48,7 @@ hr {
     padding: 0.3em 0.5em;
     margin: 0.5em auto;
 }
-.form_submit {
+.form_submit, .delete_post {
     border: none;
     border-radius: 2px;
     padding: 0.5em 3em;
@@ -81,7 +56,11 @@ hr {
     background-color: #222;
     cursor: pointer;
 }
-.form_submit:hover {
+.delete_post {
+    margin-top: 2em;
+}
+.form_submit:hover,
+.delete_post:hover {
     text-decoration: underline;
     background-color: #000;
 }

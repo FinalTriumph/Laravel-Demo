@@ -22,3 +22,6 @@ Route::get('/users/{id}/{name}', function($id, $name) {
     return 'This is user '.$name.' with an id of '.$id;
 });
 */
+Route::auth();
+
+Route::get('/home', 'HomeController@index');
