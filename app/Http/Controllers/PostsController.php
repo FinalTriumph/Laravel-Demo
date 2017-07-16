@@ -4,6 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+// To delete uploaded images with Laravel 5.3
+use Illuminate\Support\Facades\Storage;
+///////
+
+// To delete uploaded images with Laravel 5.2
+use File;
+///////
+
 use App\Http\Requests;
 
 use App\Post;
@@ -15,6 +23,16 @@ use DB;
 
 class PostsController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+    
     /**
      * Display a listing of the resource.
      *
@@ -56,8 +74,43 @@ class PostsController extends Controller
     {
         $this->validate($request, [
                 'title' => 'required',
-                'body' => 'required'
+                'body' => 'required',
+                'cover_image' => 'image|max:1999' // for laravel 5.3 add |nullable|
             ]);
+            
+        // Handle File Upload
+        
+        if ($request->hasFile('cover_image')) {
+            
+            // Get filename with the extension
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+            
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            
+            // Get just ext
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
+            
+            // Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            
+            // Upload image
+            /* For Laravel 5.3
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            */
+            
+            /* For Laravel 5.2 
+            if ($request->file('cover_image')->isValid()) {
+            */
+                //$path = $request->file('cover_image')->move('public/cover_images', $fileNameToStore);
+                $request->file('cover_image')->move('cover_images', $fileNameToStore);
+            /*
+            }
+            */
+            
+        } else {
+            $fileNameToStore = 'noimage.jpg';
+        }
             
         // Create Post
         $post = new Post;
@@ -65,6 +118,7 @@ class PostsController extends Controller
         $post->title = $request->input('title');
         $post->body = $request->input('body');
         $post->user_id = auth()->user()->id;
+        $post->cover_image = $fileNameToStore;
         
         $post->save();
         
@@ -94,6 +148,12 @@ class PostsController extends Controller
     public function edit($id)
     {
         $post = Post::find($id);
+        
+        // Check for correct user
+        if (auth()->user()->id !== $post->user_id) {
+            return redirect('/posts')->with('error', 'Unauthorized Page');
+        }
+        
         return view('posts.edit')->with('post', $post);
     }
 
@@ -108,14 +168,65 @@ class PostsController extends Controller
     {
         $this->validate($request, [
                 'title' => 'required',
-                'body' => 'required'
+                'body' => 'required',
+                'cover_image' => 'image|max:1999' // for laravel 5.3 add |nullable|
             ]);
-            
+        
         // Find And Update Post
         $post = Post::find($id);
         
+        // Check for correct user
+        if (auth()->user()->id !== $post->user_id) {
+            return redirect('/posts')->with('error', 'Unauthorized Page');
+        }
+        
+        
+        // Handle File Upload
+        
+        if ($request->hasFile('cover_image')) {
+            
+            if($post->cover_image !== 'noimage.jpg') {
+                // Delete old image
+                /* For Laravel 5.3
+                Storage::delete('public/cover_images/'.$post->cover_image);
+                */
+            
+                File::delete('cover_images/'.$post->cover_image);
+            }
+            
+            // Get filename with the extension
+            $filenameWithExt = $request->file('cover_image')->getClientOriginalName();
+            
+            // Get just filename
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            
+            // Get just ext
+            $extension = $request->file('cover_image')->getClientOriginalExtension();
+            
+            // Filename to store
+            $fileNameToStore = $filename.'_'.time().'.'.$extension;
+            
+            // Upload image
+            /* For Laravel 5.3
+            $path = $request->file('cover_image')->storeAs('public/cover_images', $fileNameToStore);
+            */
+            
+            /* For Laravel 5.2 
+            if ($request->file('cover_image')->isValid()) {
+            */
+                //$path = $request->file('cover_image')->move('public/cover_images', $fileNameToStore);
+                $request->file('cover_image')->move('cover_images', $fileNameToStore);
+            /*
+            }
+            */
+        }
+        ////////////////////
+        
         $post->title = $request->input('title');
         $post->body = $request->input('body');
+        if ($request->hasFile('cover_image')) {
+            $post->cover_image = $fileNameToStore;
+        }
         
         $post->save();
         
@@ -131,7 +242,23 @@ class PostsController extends Controller
     public function destroy($id)
     {
         $post = Post::find($id);
+        
+        // Check for correct user
+        if (auth()->user()->id !== $post->user_id) {
+            return redirect('/posts')->with('error', 'Unauthorized Page');
+        }
+        
+        if($post->cover_image !== 'noimage.jpg') {
+            // Delete image
+            /* For Laravel 5.3
+            Storage::delete('public/cover_images/'.$post->cover_image);
+            */
+            
+            File::delete('cover_images/'.$post->cover_image);
+        }
+        
         $post->delete();
+        
         return redirect('/posts')->with('success', 'Post Removed');
     }
 }

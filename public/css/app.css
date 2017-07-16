@@ -4,6 +4,7 @@
     text-align: center;
     font-family: 'Raleway', sans-serif;
     margin: 0;
+    margin-bottom: 3em;
 }
 .services {
     list-style-type: none;
@@ -25,7 +26,7 @@
     text-align: left;
 }
 .post_div a,
-.links_in_post{
+.links_in_post {
     color: #000;
     text-decoration: none;
 }
@@ -48,7 +49,7 @@ hr {
     padding: 0.3em 0.5em;
     margin: 0.5em auto;
 }
-.form_submit, .delete_post {
+.form_submit, .delete_post, .edit_delete {
     border: none;
     border-radius: 2px;
     padding: 0.5em 3em;
@@ -60,9 +61,11 @@ hr {
     margin-top: 2em;
 }
 .form_submit:hover,
-.delete_post:hover {
+.delete_post:hover,
+.edit_delete:hover {
     text-decoration: underline;
     background-color: #000;
+    color: #fff;
 }
 .alert {
     text-align: left;
@@ -77,4 +80,21 @@ hr {
 }
 .alert_error {
     background-color: #FFCFCD;
+}
+table {
+    background-color: #eee;
+    border: 1px solid #bbb;
+    width: 100%;
+}
+th, td {
+    width: 33%;
+    padding: 1em;
+    text-align: center;
+}
+th {
+    border-bottom: 1px solid #444;
+    padding: 0.5em;
+}
+img {
+    max-height: 500px;
 }

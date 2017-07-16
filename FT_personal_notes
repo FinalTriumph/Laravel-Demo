@@ -29,3 +29,8 @@ php artisan make:migration add_user_id_to_posts,
 then edit up() and down() functions in migration file,
 then 
 php artisan migrate
+
+For image storing:
+php artisan storage:link
+or
+ln -s ../storage/app/public public/storage

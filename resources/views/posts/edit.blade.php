@@ -2,7 +2,7 @@
 
 @section('content')
     <h1>Edit Post</h1>
-    {!! Form::open(['action' => ['PostsController@update', $post->id], 'method' => 'POST']) !!}
+    {!! Form::open(['action' => ['PostsController@update', $post->id], 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
         <div class="form_div">
             {{Form::label('title', 'Title')}}
             <br />
@@ -11,6 +11,8 @@
             {{Form::label('body', 'Body')}}
             <br />
             {{Form::textarea('body', $post->body, ['id' => 'article-ckeditor', 'class' => 'form_input', 'placeholder' => 'Body Text'])}}
+            <br />
+            {{Form::file('cover_image')}}
             <br />
             {{Form::hidden('_method', 'PUT')}}
             {{Form::submit('Submit', ['class' => 'form_submit'])}}
